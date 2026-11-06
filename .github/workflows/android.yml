@@ -33,7 +33,10 @@ jobs:
       - name: Extraer proyecto
         run: |
           unzip -q source.zip -d app-source
-
+- name: Ver contenido
+  run: |
+    ls -la
+    find app-source -maxdepth 3 | head -50
       - name: Compilar APK
         run: |
           GRADLEW=$(find app-source -name gradlew -type f | head -n 1)
@@ -50,4 +53,4 @@ jobs:
         with:
           name: CHICARO-APK
           path: app-source/**/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
+        ./gradlew assembleDebug --stacktrace  
