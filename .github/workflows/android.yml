@@ -1,4 +1,5 @@
 
+
 name: CHICARO Android APK
 
 on:
@@ -10,21 +11,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
-      - name: Configurar Java 17
+      - name: Configurar Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: '17'
 
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Instalar componentes Android
+      - name: Instalar componentes
         run: |
           sdkmanager "platform-tools"
           sdkmanager "platforms;android-35"
@@ -33,10 +33,7 @@ jobs:
       - name: Extraer proyecto
         run: |
           unzip -q source.zip -d app-source
-- name: Ver contenido
-  run: |
-    ls -la
-    find app-source -maxdepth 3 | head -50
+
       - name: Compilar APK
         run: |
           GRADLEW=$(find app-source -name gradlew -type f | head -n 1)
@@ -46,11 +43,11 @@ jobs:
           fi
           cd "$(dirname "$GRADLEW")"
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Guardar APK
         uses: actions/upload-artifact@v4
         with:
           name: CHICARO-APK
           path: app-source/**/build/outputs/apk/debug/*.apk
-        ./gradlew assembleDebug --stacktrace  
+          if-no-files-found: error
