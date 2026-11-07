@@ -29,18 +29,17 @@ jobs:
         run: |
           unzip -q source.zip -d app-source
 
-      - name: Compilar APK
+            - name: Compilar APK
         run: |
-          GRADLEW=$(find app-source -name gradlew -type f | head -n 1)
+          GRADLEW=$(find app-source -type f -name gradlew | head -n 1)
           if [ -z "$GRADLEW" ]; then
             echo "No se encontró gradlew"
+            find app-source -maxdepth 4 -type f | head -n 50
             exit 1
           fi
           cd "$(dirname "$GRADLEW")"
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
-
-      - name: Guardar APK
         uses: actions/upload-artifact@v4
         with:
           name: CHICARO-APK
